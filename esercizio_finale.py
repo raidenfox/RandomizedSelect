@@ -95,20 +95,21 @@ def test(A,i):
 def test_data(case):
   vect = {}
   total = 0
-  for i in range(10):
-    base = 1000
-    increment = 500
+  for i in range(NTEST):
     total = total+ base + increment*(i+1)
-    A = random_array(total)
+    if case == 1 or case == 2:
+      A = random_array(total)
+    else:
+      A = [NTEST]*total
     vect[total] = 0
-    for j in range(10):
+    for j in range(NTEST):
       size = len(A)
       time = 0
       if case == 1:
 	vect[total] = vect[total] + test(A,size/2)
       else:
 	vect[total] = vect[total] + test(A,size)
-    vect[total] = vect[total]/10
+    vect[total] = vect[total]/NTEST
   
   ordered = sorted(vect.iteritems(), key=operator.itemgetter(0))
   return ordered
@@ -119,9 +120,10 @@ def menu():
   else:    
    print "## INTERACTIVE MODE ##"
    print "Seleziona il caso da lanciare in esecuzione"
-   print "1 - Caso medio"
-   print "2 - Caso peggiore"
-   print "3 - Modalita' manuale"
+   print "1 - Caso migliore"
+   print "2 - Caso medio"
+   print "3 - Caso peggiore"
+   print "4 - Modalita' manuale"
    x = input("> ")
    
    if x == 1 or x == 2:
@@ -129,6 +131,10 @@ def menu():
       data = test_data(x)
       dataIO(data,x)
    elif x == 3:
+      print "Avvio dei test..."
+      data = test_data(x)
+      dataIO(data,x)      
+   elif x == 4:
       load_int()
    else:
       return 0
@@ -137,6 +143,8 @@ def dataIO(data,x):
   if x == 1:
     out_file = open("tempi_CM.txt","w")
   elif x == 2:
+    out_file = open("tempi_MC.txt","w")
+  elif x == 3:
     out_file = open("tempi_WC.txt","w")
     
   content = "x = [ "
@@ -157,8 +165,14 @@ def load_int():
   stat = input("Inserisci la k-sima statistica d'ordine da trovare: ")
   test(A,stat)
 
+# Environment Params
 debug = 1
 debug_int = 0
+
+# Test params
+NTEST = 10
+base = 1000
+increment = 500
 
 menu()
 
